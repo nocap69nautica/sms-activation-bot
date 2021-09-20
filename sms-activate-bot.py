@@ -62,7 +62,7 @@ CountryUrl = country(isocode="&country=$country")
 GetNumberUrl = getnumber(urlNeeded="&action=getNumber")
 
 
-# User input function for bot etc.
+# User input function for bot etc. Python terminal not request.
 
 def Balance_get():
     x = input("Would you like to run this request? [Y/N] ").lower()
@@ -75,34 +75,45 @@ def Balance_get():
         SyntaxError
         print("Command invalid, ending.")
 
-# Functions stored
+
+# | Functions stored |
+
+# https://sms-activate.ru/stubs/handler_api.php?api_key=
+def urlStart():
+    return ApiUrl.api_method()
+
+# &action=getNumber
 
 
 def getNumber():
     return GetNumberUrl.getnumberurl()
 
-
-def urlStart():
-    return ApiUrl.api_method()
+# &service=
 
 
-def getService():
+def serviceOption():
     return ServiceUrl.serviceinfo()
 
+# &country=
 
-def getIso():
+
+def countryOption():
     return CountryUrl.countrycode()
+
+# https://sms-activate.ru/stubs/handler_api.php?api_key=api&action=setStatus&status=8&id=id
 
 
 def endNumber():
     return urlStart().strip() + "&action=setStatus" + "&status=8"
 
+# https://sms-activate.ru/stubs/handler_api.php?api_key=api&action=setStatus&status=6&id=id
+
 
 def completeNumber():
     return urlStart().strip() + "&action=setStatus" + "&status=6"
 
-# Main functions
 
+# Main functions
 
 def getBalance():
     return ApiUrl.api_method().strip() + BalanceUrl.service_balance()
@@ -117,11 +128,11 @@ You can find a full list of services at:
 Type service:""").lower()
     boolean = serviceNo.isdigit()
     if len(serviceNo) == 2 and boolean == False:
-        serviceCodeUrl = getService() + str(serviceNo)
+        serviceCodeUrl = serviceOption() + str(serviceNo)
         actionGetNumber = getNumber() + serviceCodeUrl
         iso = input("Enter country ISO code: ")
         if iso.isdigit() == True and len(iso) == 2:
-            iso_url = str(getIso()) + str(iso)
+            iso_url = str(countryOption()) + str(iso)
             order = urlStart().strip() + actionGetNumber.strip() + iso_url
             iso_url = requests.get(order)
             print(iso_url.text)
@@ -150,6 +161,3 @@ Type service:""").lower()
     else:
         SyntaxError
         print("Unrecognised ending.")
-
-
-order_number()
