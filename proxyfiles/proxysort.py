@@ -2,8 +2,8 @@ from selenium.webdriver.chrome import options
 from seleniumwire import webdriver
 from time import sleep
 
-
-proxylist = open("Mainproxy.txt", "r")
+with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxyMain.txt", "r") as proxyfile:
+    proxylist = proxyfile.readlines()
 
 
 def lineCount():
@@ -12,9 +12,6 @@ def lineCount():
         if line != "\n":
             line_count += 1
     return line_count
-
-
-linecount = lineCount()
 
 
 def proxySortHttps():
@@ -49,18 +46,10 @@ def proxySortHttp():
         colonEndingRemove = proxy[colonEnding:]
         start = "http://" + colon3Remove + colonEndingRemove
         finish = "@" + colon1Remove + colon2Remove
-        full = start.strip() + finish.strip()
-        return full
+        full = start.strip() + finish.strip() + "\n"
+        with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\httpproxy.txt", "a") as httpopen:
+            httpopen.writelines(full)
+    print("done")
 
 
-httpopen = open("httpproxy.txt", "w")
-httpopen.write(proxySortHttp())
-
-
-PATH = "C:\webdrivers\chromedriver.exe"
-
-
-w = webdriver.Chrome(PATH, seleniumwire_options=options)
-w.get("https://twitter.com/PepsiMaxUK")
-sleep(10)
-w.quit()
+proxySortHttp()
