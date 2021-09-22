@@ -1,5 +1,6 @@
 import requests
 from time import sleep
+from proxyfiles import proxysort
 
 
 # Classes for values in url
