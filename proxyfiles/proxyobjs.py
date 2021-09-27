@@ -1,15 +1,49 @@
-import os
 import zipfile
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
 from time import sleep
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
-with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxyMain.txt", "r+") as all_proxies:
-    top = all_proxies.readline()[0].rstrip()
 with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxybridge.txt", "r+") as proxyfile:
-    proxyfile.write(top)
     proxylist = proxyfile.readlines()
+
+
+def remove_lineMain(fileName, lineToSkip):
+    """ Removes a given line from a file """
+    with open(fileName, 'r') as read_file:
+        lines = read_file.readlines()
+
+    currentLine = 1
+    with open(fileName, 'w') as write_file:
+        for line in lines:
+            if currentLine == lineToSkip:
+                pass
+            else:
+                write_file.write(line)
+
+            currentLine += 1
+
+# call the function, passing the file and line to skip
+
+
+def remove_lineBridge(fileName1, filename2, lineToSkip):
+    """ Removes a given line from a file """
+    with open(fileName1, 'r') as read_file:
+        lines = read_file.readlines()
+
+    currentLine = 1
+    with open(filename2, 'w') as write_file:
+        for line in lines[:2]:
+            if currentLine == lineToSkip:
+                pass
+            else:
+                write_file.write(line)
+
+            currentLine += 1
+
+# call the function, passing the file and line to skip
 
 
 def colon1():
@@ -137,22 +171,22 @@ def get_chromedriver(use_proxy=False, user_agent=None):
 
 
 def main():
-    driver = get_chromedriver(use_proxy=True)
-    # driver.get('https://www.google.com/search?q=my+ip+address')
-    driver.get('https://twitter.com/KylekicksZn')
-    sleep(15)
-    with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxybridge.txt", 'r+') as bridge:
-        f1 = bridge.readline()
-        bridge.truncate(0)
-        bridge.close()
-    with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxyMain.txt", 'r+') as proxyDelete:
-        lines = proxyDelete.readlines()
-        proxyDelete.seek(0)
-        proxyDelete.truncate()
-        proxyDelete.writelines(lines[1])
-    with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxylog.txt", 'r+') as log:
-        logs = log.write(f1)
-        enumerate(logs)
+    try:
+        driver = get_chromedriver(use_proxy=True)
+        # driver.get('https://www.google.com/search?q=my+ip+address')
+        driver.get('https://whatismyipaddress.com/')
+        sleep(5)
+    finally:
+        driver.close()
+        with open("proxyfiles\proxybridge.txt", 'r') as bridge:
+            bridgeAll = bridge.readline()
+        with open("proxyfiles\proxylog.txt", 'r+') as log:
+            log.readlines()
+            log.write("\n")
+            log.write(bridgeAll)
+        remove_lineBridge("proxyfiles/proxyMain.txt",
+                          "proxyfiles/proxybridge.txt", 1)
+        remove_lineMain("proxyfiles\proxyMain.txt", 1)
 
 
 if __name__ == '__main__':

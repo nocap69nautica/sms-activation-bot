@@ -1,6 +1,5 @@
 import requests
 from time import sleep
-from proxyfiles import proxysort
 
 
 # Classes for values in url
@@ -120,7 +119,7 @@ def getBalance():
     return ApiUrl.api_method().strip() + BalanceUrl.service_balance()
 
 
-def order_number():
+def main():
     serviceNo = input("""First, what service would you like to choose?
 You can find a full list of services at:
 
@@ -162,3 +161,7 @@ Type service:""").lower()
     else:
         SyntaxError
         print("Unrecognised ending.")
+
+
+if __name__ == '__main__':
+    main()
