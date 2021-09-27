@@ -1,6 +1,6 @@
 import random
 import names
-from pathlib import Path
+import sys
 
 
 class gmailAccounts():
@@ -30,14 +30,9 @@ def accounts():
         print("Error invalid character/s, make sure you are entering a digit.")
 
 
-def starter(boolean):
-    if boolean == "yes":
-        for i in range(accounts()):
-            i == i
-            fullNames = names.get_full_name().replace(" ", "")
-            namesAll = fullNames + str(random.randint(0, 99))
-        while True:
-            open(f"profiles{counter()}.txt", "w").write(namesAll + "\n")
-
-
-starter("yes")
+for i in range(1):
+    open(f"profiles{counter}", "w")
+for i in range(accounts()):
+    fullNames = names.get_full_name().replace(" ", "")
+    fullNames + str(random.randint(0, 99))
+    print(fullNames, file=open(f"profiles{counter}", "a"))
