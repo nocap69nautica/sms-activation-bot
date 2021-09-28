@@ -1,24 +1,27 @@
 import random
 import names
-import sys
+import csv
 
 
 class gmailAccounts():
 
-    def __init__(self, gmail, outlook):
+    def __init__(self, gmail):
         self.gmailDomain = gmail
-        self.outlookDomain = outlook
 
     def domainNameGmail(self):
         return self.gmailDomain
+
+
+class outlookAccounts():
+    def __init__(self, outlook):
+        self.outlookDomain = outlook
 
     def domainNameOutlook(self):
         return self.outlookDomain
 
 
-def counter(i=[0]):
-    i[0] += 1
-    return i[0]
+gmail = gmailAccounts(gmail="@gmail.com")
+outlook = outlookAccounts(outlook="@outlook.com")
 
 
 def accounts():
@@ -30,9 +33,16 @@ def accounts():
         print("Error invalid character/s, make sure you are entering a digit.")
 
 
-for i in range(1):
-    open(f"profiles{counter}", "w")
-for i in range(accounts()):
-    fullNames = names.get_full_name().replace(" ", "")
-    fullNames + str(random.randint(0, 99))
-    print(fullNames, file=open(f"profiles{counter}", "a"))
+with open(f'./end.csv', 'w', newline='') as file:
+    fieldNames = ['first name', 'second name', 'email']
+    writer = csv.DictWriter(file, fieldnames=fieldNames)
+    writer.writeheader()
+    for i in range(accounts()):
+        fullNames = names.get_full_name()
+        name = fullNames.replace(" ", "") + str(random.randint(0, 99))
+        gmailsAcc = name + gmailAccounts.domainNameGmail(gmail)
+        space = fullNames.find(" ")
+        first = fullNames[:space]
+        second = fullNames[space:].replace(" ", "")
+        writer.writerow(
+            {'first name': first, 'second name': second, 'email': gmailsAcc})
