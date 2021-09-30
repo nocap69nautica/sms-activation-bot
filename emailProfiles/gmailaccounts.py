@@ -48,32 +48,46 @@ def example():
     pass
 
 
-example()
+def count(func):
+    def wrapper(*args, **kwargs):
+        wrapper.counter += 1    # executed every time the wrapped function is called
+        return func(*args, **kwargs)
+    wrapper.counter = 0         # executed only once in decorator definition time
+    return wrapper
 
+
+@count
+def func():
+    pass
+
+
+def counter():
+    return func.counter
+
+
+def times():
+    for i in range(counter()):
+        return func() * i[-1]
+
+
+example()
 if example.has_been_called:
-    total = [0]
-    for i in range(1):
-        total.reverse()
-        if total[0] == 0:
-            total.append(1)
-        if total[0] != 0:
-            total.reverse()
-            last = total[-1]
-            end = last + 1
-            total.append(end)
-        ending = total[-1]
-        with open(f'./end{ending}.csv', 'w', newline='') as file:
-            fieldNames = ['first name', 'second name', 'email']
-            writer = csv.DictWriter(file, fieldnames=fieldNames)
-            writer.writeheader()
-            for i in range(Main()):
-                fullNames = names.get_full_name()
-                name = fullNames.replace(
-                    " ", "") + str(random.randint(0, 99))
-                gmailsAcc = name + gmailAccounts.domainNameGmail(gmail)
-                space = fullNames.find(" ")
-                first = fullNames[:space]
-                second = fullNames[space:].replace(" ", "")
-                writer.writerow(
-                    {'first name': first, 'second name': second, 'email': gmailsAcc})
+    try:
+        times()
+    finally:
+        for i in range(1):
+            with open(f'./end{counter()}.csv', 'w', newline='') as file:
+                fieldNames = ['first name', 'second name', 'email']
+                writer = csv.DictWriter(file, fieldnames=fieldNames)
+                writer.writeheader()
+                for i in range(Main()):
+                    fullNames = names.get_full_name()
+                    name = fullNames.replace(
+                        " ", "") + str(random.randint(0, 99))
+                    gmailsAcc = name + gmailAccounts.domainNameGmail(gmail)
+                    space = fullNames.find(" ")
+                    first = fullNames[:space]
+                    second = fullNames[space:].replace(" ", "")
+                    writer.writerow(
+                        {'first name': first, 'second name': second, 'email': gmailsAcc})
             file.close()

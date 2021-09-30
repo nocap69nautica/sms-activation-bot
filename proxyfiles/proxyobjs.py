@@ -4,9 +4,10 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
-
-with open("c:\\Users\\kyle\\dev\\sms-activate-bot\\proxyfiles\\proxybridge.txt", "r+") as proxyfile:
+with open("proxyfiles\proxybridge.txt", "r+") as proxyfile:
     proxylist = proxyfile.readlines()
 
 
@@ -153,7 +154,6 @@ chrome.webRequest.onAuthRequired.addListener(
 
 
 def get_chromedriver(use_proxy=False, user_agent=None):
-    s = Service(executable_path="C:\webdrivers\chromedriver.exe")
     chrome_options = webdriver.ChromeOptions()
     if use_proxy:
         pluginfile = 'proxy_auth_plugin.zip'
@@ -165,19 +165,26 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     if user_agent:
         chrome_options.add_argument('--user-agent=%s' % user_agent)
     driver = webdriver.Chrome(
-        service=s,
+        executable_path="C:\webdrivers\chromedriver.exe",
         options=chrome_options)
     return driver
 
 
 def main():
     try:
-        driver = get_chromedriver(use_proxy=True)
+        d = get_chromedriver(use_proxy=True)
+        actions = ActionChains(d)
         # driver.get('https://www.google.com/search?q=my+ip+address')
-        driver.get('https://whatismyipaddress.com/')
+        d.get('https://eu.aimeleondore.com/products/ald-new-balance-p550-3')
         sleep(5)
+        close = d.find_element_by_class_name("glClose")
+        actions.click(close)
+        d.execute_script('window.scrollTo(0,1500);')
+        WebDriverWait(d, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "label[placeholder='8']"))).click()
+        sleep(3)
+        d.close()
     finally:
-        driver.close()
         with open("proxyfiles\proxybridge.txt", 'r') as bridge:
             bridgeAll = bridge.readline()
         with open("proxyfiles\proxylog.txt", 'r+') as log:
