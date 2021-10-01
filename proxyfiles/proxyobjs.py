@@ -175,7 +175,13 @@ def main():
         d = get_chromedriver(use_proxy=True)
         actions = ActionChains(d)
         # driver.get('https://www.google.com/search?q=my+ip+address')
-        d.get('https://eu.aimeleondore.com/products/ald-new-balance-p550-3')
+        d.get('https://accounts.google.com/SignUp')
+        first_name = WebDriverWait(d, 10).until(EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, "input[id='firstName']")))
+        last_name = WebDriverWait(d, 10).until(EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, "input[id='lastName']")))
+
+        first_name.send_keys("")
         sleep(5)
         close = d.find_element_by_class_name("glClose")
         actions.click(close)

@@ -1,3 +1,4 @@
+from typing import Text
 import requests
 from time import sleep
 
@@ -134,33 +135,48 @@ Type service:""").lower()
         if iso.isdigit() == True and len(iso) == 2:
             iso_url = str(countryOption()) + str(iso)
             order = urlStart().strip() + actionGetNumber.strip() + iso_url
-            iso_url = requests.get(order)
-            print(iso_url.text)
-            # This a,b,c is to directly get the ID
-            a = iso_url.text.find(":")
-            b = iso_url.text.find(":", 20)
-            c = iso_url.text[a:b]
-            d = c.replace(":", "")
-            options = input(
-                "TYPE: Complete or Cancel: ").lower()
-            if options == "complete":
-                completion = completeNumber().strip() + "&id=" + d
-                final = requests.get(completion)
-                print(completion)
-                print(final.text)
-            if options == "cancel":
-                cancellation = endNumber().strip() + "&id=" + d
-                ending = requests.get(cancellation)
-                print(cancellation)
-                print(ending.text)
+            try:
+                iso_url = requests.get(order)
+                allOptions = iso_url.text
+                place = allOptions[17].find(":")
+                numberPlace = allOptions[place:]
+                open("/number.txt", 'x')
+                with open("/number.txt", 'w') as number:
+                    number.write(numberPlace)
+
+            finally:
+                if iso_url.text == "NO_KEY":
+                    print("No key was entered, please enter a key in api_key.txt")
+                else:
+                    # This a,b,c is to directly get the ID
+                    a = iso_url.text.find(":")
+                    b = iso_url.text.find(":", 20)
+                    c = iso_url.text[a:b]
+                    d = c.replace(":", "")
+                    return d
+        elif len(serviceNo) != 2 or boolean == True:
+            print("Unrecognised ending.")
         else:
-            print(
-                "Invalid characters (Too many/less or invalid characters or both. Only input = 'digitdigit' , '24' etc.")
-    elif len(serviceNo) != 2 or boolean == True:
-        print("Unrecognised ending.")
+            SyntaxError
+            print("Unrecognised ending.")
+
+
+def finishNumber():
+    options = input(
+        "TYPE: Complete or Cancel: ").lower()
+    if options == "complete":
+        completion = completeNumber().strip() + "&id=" + main()
+        final = requests.get(completion)
+        print(completion)
+        print(final.text)
+    if options == "cancel":
+        cancellation = endNumber().strip() + "&id=" + main()
+        ending = requests.get(cancellation)
+        print(cancellation)
+        print(ending.text)
     else:
-        SyntaxError
-        print("Unrecognised ending.")
+        print(
+            "Invalid characters (Too many/less or invalid characters or both. Only input = 'digitdigit' , '24' etc.")
 
 
 if __name__ == '__main__':
